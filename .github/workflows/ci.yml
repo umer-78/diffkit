@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+      - name: Formatting
+        run: test -z "$(gofmt -l .)"
+      - name: Vet
+        run: go vet ./...
+      - name: Test with the race detector
+        run: go test -race -cover ./...
+      - name: Build
+        run: go build -trimpath -o /tmp/diffkit ./cmd/diffkit
+
+      - name: Diff, and check the output against GNU diff
+        run: |
+          /tmp/diffkit diff testdata/config-old.txt testdata/config-new.txt || true
+          /tmp/diffkit stat testdata/config-old.txt testdata/config-new.txt || true
+          /tmp/diffkit diff testdata/config-old.txt testdata/config-new.txt > /tmp/ours.diff || true
+          diff -U3 testdata/config-old.txt testdata/config-new.txt > /tmp/gnu.diff || true
+          tail -n +3 /tmp/ours.diff > /tmp/ours.body
+          tail -n +3 /tmp/gnu.diff  > /tmp/gnu.body
+          diff /tmp/ours.body /tmp/gnu.body
+          echo "hunks match GNU diff"
+
+      - name: The patch it emits is the patch it reads
+        run: |
+          /tmp/diffkit apply testdata/config-old.txt /tmp/ours.diff > /tmp/applied.txt
+          diff /tmp/applied.txt testdata/config-new.txt
+          echo "round trip clean"
+
+      - name: A patch that does not match is refused
+        run: |
+          if /tmp/diffkit apply testdata/merge-base.txt /tmp/ours.diff; then
+            echo "a mismatched patch was applied, which it must not be"
+            exit 1
+          fi
+
+      - name: Merge, cleanly and with conflicts
+        run: |
+          /tmp/diffkit merge testdata/merge-base.txt testdata/merge-ours.txt testdata/merge-theirs.txt
+          if /tmp/diffkit merge testdata/merge-base.txt testdata/conflict-ours.txt testdata/conflict-theirs.txt; then
+            echo "a conflicting merge must not exit zero"
+            exit 1
+          fi
+
+      - name: What each algorithm costs on 4,000 lines
+        run: |
+          python3 - <<'PY'
+          import random
+          random.seed(5)
+          lines = [f"line {i}: {random.choice(['alpha','beta','gamma','delta'])} value={i*7%1000}" for i in range(4000)]
+          open('/tmp/big_a.txt','w').write("\n".join(lines)+"\n")
+          b = list(lines)
+          for i in (100, 900, 1800, 2500, 3300):
+              b[i] = b[i].replace("value=", "VALUE=")
+          b.insert(2000, "an inserted line")
+          open('/tmp/big_b.txt','w').write("\n".join(b)+"\n")
+          PY
+          /tmp/diffkit compare /tmp/big_a.txt /tmp/big_b.txt
+
+      - name: Benchmarks
+        run: go test ./internal/diff/ -run XXX -bench . -benchtime 20x
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker build -t diffkit:ci .
+      - name: Run it
+        run: docker run --rm diffkit:ci --help

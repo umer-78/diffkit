@@ -1,0 +1,14 @@
+server:
+  host: 0.0.0.0
+  port: 8443
+  timeout: 30s
+  tls: true
+
+database:
+  driver: postgres
+  host: db.internal
+  pool: 25
+
+logging:
+  level: debug
+  format: json
