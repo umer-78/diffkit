@@ -302,7 +302,7 @@ func BenchmarkMyers(b *testing.B) {
 		x, y := corpus(n, 5)
 		b.Run(fmt.Sprintf("n=%d", n), func(b *testing.B) {
 			b.ReportAllocs()
-			for b.Loop() {
+			for i := 0; i < b.N; i++ {
 				Myers(x, y)
 			}
 		})
@@ -314,7 +314,7 @@ func BenchmarkPatience(b *testing.B) {
 		x, y := corpus(n, 5)
 		b.Run(fmt.Sprintf("n=%d", n), func(b *testing.B) {
 			b.ReportAllocs()
-			for b.Loop() {
+			for i := 0; i < b.N; i++ {
 				Patience(x, y)
 			}
 		})
@@ -326,7 +326,7 @@ func BenchmarkTable(b *testing.B) {
 		x, y := corpus(n, 5)
 		b.Run(fmt.Sprintf("n=%d", n), func(b *testing.B) {
 			b.ReportAllocs()
-			for b.Loop() {
+			for i := 0; i < b.N; i++ {
 				Table(x, y)
 			}
 		})

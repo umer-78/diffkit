@@ -29,7 +29,7 @@ $ diffkit diff testdata/config-old.txt testdata/config-new.txt
    format: json
 ```
 
-- **148 tests** passing under `-race`, Go 1.22, no dependencies
+- **148 tests** passing under `-race`, built on Go 1.22 and 1.24, no dependencies
 - Hunk output is compared against **GNU diff** in the test suite and in CI —
   checking a formatter against its own parser checks nothing
 - Exits 0 for no difference, 1 for differences or conflicts, 2 for an error, so
