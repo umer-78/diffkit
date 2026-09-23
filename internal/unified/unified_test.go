@@ -235,6 +235,14 @@ func TestOutputMatchesGNUDiff(t *testing.T) {
 	if err != nil {
 		t.Skip("diff(1) not available")
 	}
+	// Apple/FreeBSD diff (macOS) is not GNU diff: for a zero-context prepend it
+	// emits -1,0 where GNU emits -0,0, and Apple's own patch then inserts after
+	// line 1 instead of at the start. Only GNU diff is the reference here.
+	if ver, err := exec.Command(path, "--version").CombinedOutput(); err != nil ||
+		!strings.Contains(string(ver), "GNU") {
+		t.Skipf("diff(1) is not GNU diff: %s",
+			strings.SplitN(strings.TrimSpace(string(ver)), "\n", 2)[0])
+	}
 
 	cases := []struct{ name, a, b string }{
 		{"one change", "1\n2\n3\n4\n5", "1\n2\nX\n4\n5"},
