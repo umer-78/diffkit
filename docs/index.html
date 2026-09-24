@@ -6,6 +6,11 @@
   <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0a0c10" media="(prefers-color-scheme: dark)">
   <title>diffkit — Diff &amp; Merge Demo</title>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="diffkit — Diff &amp; Merge Demo">
+  <meta property="og:description" content="Interactive line diff: Myers O(ND), patience and table LCS — unified output, side-by-side view, in the browser.">
+  <meta property="og:url" content="https://umer-78.github.io/diffkit/">
+  <meta name="twitter:card" content="summary">
   <meta name="description" content="Interactive line diff: Myers O(ND), patience and table LCS — unified output, side-by-side view, in the browser.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%232563eb'/><text x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='monospace'>±</text></svg>">
   <style>
@@ -492,7 +497,7 @@ logging:
         <button id="swapBtn" type="button">swap</button>
         <label class="toggle" style="margin:0;align-self:center"><input type="checkbox" id="wordMode"> word-level highlight</label>
       </div>
-      <div id="stats" style="margin-top:10px"></div>
+      <div id="stats" style="margin-top:10px" aria-live="polite"></div>
       <div class="tabs" style="margin-top:12px">
         <button class="active" data-tab="side" type="button">side-by-side</button>
         <button data-tab="unified" type="button">unified</button>
@@ -556,9 +561,9 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
       </div>
       <div class="row" style="margin-top:10px">
         <button class="primary" id="mergeBtn" type="button">merge</button>
-        <span id="mergeStats" class="muted" style="font-size:13px;align-self:center"></span>
+        <span id="mergeStats" class="muted" style="font-size:13px;align-self:center" aria-live="polite"></span>
       </div>
-      <div id="mergeOut" class="result-box" style="margin-top:12px">Press merge to combine the two branches.</div>
+      <div id="mergeOut" class="result-box" style="margin-top:12px" aria-live="polite">Press merge to combine the two branches.</div>
     </section>
 
     <section class="card">
