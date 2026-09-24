@@ -1062,7 +1062,7 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
           : 'Patience beat Myers — that would mean Myers has a bug; distance should be minimal.';
     }
 
-    document.querySelectorAll('.presets button').forEach(btn => {
+    document.querySelectorAll('.presets button[data-p]').forEach(btn => {
       btn.addEventListener('click', () => {
         const p = PRESETS[btn.dataset.p];
         $('oldText').value = p.old;
@@ -1151,7 +1151,7 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
         const side = [];
         while (i < rows.length && rows[i].t !== 'eq') {
           if (rows[i].t === 'del') end = rows[i].pos + 1;
-          side.push(rows[i].text);
+          else side.push(rows[i].text);
           i++;
         }
         hunks.push({ start, end, side });
@@ -1178,7 +1178,8 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
       const opsL = myersDiff(base, Ls), opsR = myersDiff(base, Rs);
       const hL = rowsToHunks(rowsFromOps(base, Ls, opsL));
       const hR = rowsToHunks(rowsFromOps(base, Rs, opsR));
-      // build clusters from union of hunks (overlap or touch)
+      // build clusters from union of hunks that overlap or touch: like diff3,
+      // edits with no unchanged base line between them are one region
       const all = [
         ...hL.map(h => ({ ...h, branch: 'L' })),
         ...hR.map(h => ({ ...h, branch: 'R' }))
@@ -1186,8 +1187,7 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
       const clusters = [];
       for (const h of all) {
         const last = clusters[clusters.length - 1];
-        // strict overlap only: edits on neighbouring lines merge cleanly
-        if (last && h.start < last.end) { last.end = Math.max(last.end, h.end); last.items.push(h); }
+        if (last && h.start <= last.end) { last.end = Math.max(last.end, h.end); last.items.push(h); }
         else clusters.push({ start: h.start, end: h.end, items: [h] });
       }
       const out = [];
