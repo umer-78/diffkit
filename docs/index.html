@@ -399,9 +399,22 @@ textarea { tab-size: 2; font-size: 13px; }
 .result-box .copy-btn { position: absolute; top: 8px; right: 8px; font-size: 11px; padding: 4px 10px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; opacity: 0; transition: opacity 0.2s; }
 .result-box:hover .copy-btn, .result-box .copy-btn:focus-visible { opacity: 1; }
 .result-box { position: relative; }
-  </style>
+  
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
 </head>
 <body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <main id="main">
+
   <div class="wrap">
     <header class="top">
       <div class="brand">
@@ -420,10 +433,10 @@ textarea { tab-size: 2; font-size: 13px; }
       <h2><span class="section-num">1</span> Two texts, three algorithms</h2>
       <p class="muted" style="margin-top:0">Paste old and new. Algorithms share one edit-script type: <code>equal / delete / insert</code>. Myers walks diagonals of the edit graph at O((N+M)D); the table fills (N+1)×(M+1) — same distance, far more memory.</p>
       <div class="presets">
-        <button data-p="config">config files</button>
-        <button data-p="funcs">function insert</button>
-        <button data-p="big">bigger diff</button>
-        <button data-p="same">identical</button>
+        <button data-p="config" type="button">config files</button>
+        <button data-p="funcs" type="button">function insert</button>
+        <button data-p="big" type="button">bigger diff</button>
+        <button data-p="same" type="button">identical</button>
       </div>
       <div class="grid two">
         <div>
@@ -475,15 +488,15 @@ logging:
             <option value="3" selected>3</option>
           </select>
         </label>
-        <button class="primary" id="diffBtn">diff</button>
-        <button id="swapBtn">swap</button>
+        <button class="primary" id="diffBtn" type="button">diff</button>
+        <button id="swapBtn" type="button">swap</button>
         <label class="toggle" style="margin:0;align-self:center"><input type="checkbox" id="wordMode"> word-level highlight</label>
       </div>
       <div id="stats" style="margin-top:10px"></div>
       <div class="tabs" style="margin-top:12px">
-        <button class="active" data-tab="side">side-by-side</button>
-        <button data-tab="unified">unified</button>
-        <button data-tab="compare">compare algorithms</button>
+        <button class="active" data-tab="side" type="button">side-by-side</button>
+        <button data-tab="unified" type="button">unified</button>
+        <button data-tab="compare" type="button">compare algorithms</button>
       </div>
       <div id="tab-side" class="table-wrap" role="region" aria-label="side-by-side diff">
         <table class="diff-table" id="sideTable"></table>
@@ -523,9 +536,9 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
       <h2><span class="section-num">4</span> 3-way merge playground</h2>
       <p class="muted" style="margin-top:0">Diff3 in the browser: hunks from <code>base→left</code> and <code>base→right</code> are merged over the shared ancestor. Non-overlapping edits combine cleanly; edits to the same region produce conflict markers.</p>
       <div class="presets">
-        <button data-mp="clean">clean merge</button>
-        <button data-mp="conflict">conflict</button>
-        <button data-mp="bothadd">both add</button>
+        <button data-mp="clean" type="button">clean merge</button>
+        <button data-mp="conflict" type="button">conflict</button>
+        <button data-mp="bothadd" type="button">both add</button>
       </div>
       <div class="merge-grid">
         <div class="mg-base">
@@ -542,7 +555,7 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
         </div>
       </div>
       <div class="row" style="margin-top:10px">
-        <button class="primary" id="mergeBtn">merge</button>
+        <button class="primary" id="mergeBtn" type="button">merge</button>
         <span id="mergeStats" class="muted" style="font-size:13px;align-self:center"></span>
       </div>
       <div id="mergeOut" class="result-box" style="margin-top:12px">Press merge to combine the two branches.</div>
@@ -553,9 +566,9 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
       <p class="muted" style="margin-top:0">The O(ND) edit graph: diagonals are free matches, vertical/horizontal steps cost one edit. The animated path is the shortest path Myers finds — its length minus the diagonal equals D, the edit distance.</p>
       <div class="row" style="margin-top:6px">
         <span id="vizInfo" class="muted" style="font-size:13px;align-self:center">Uses the OLD/NEW texts from section 1.</span>
-        <button class="primary" id="vizPlay">animate path</button>
-        <button id="vizStep">step</button>
-        <button id="vizReset">reset</button>
+        <button class="primary" id="vizPlay" type="button">animate path</button>
+        <button id="vizStep" type="button">step</button>
+        <button id="vizReset" type="button">reset</button>
       </div>
       <canvas id="myersCanvas" class="viz-canvas" width="960" height="420" style="margin-top:12px" role="img" aria-label="Myers edit graph path"></canvas>
       <div class="viz-legend">
@@ -571,10 +584,10 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
       <h2><span class="section-num">6</span> Apply patch &amp; export</h2>
       <p class="muted" style="margin-top:0">Every context and deleted line is checked against the target before anything is written — same rule the Go CLI enforces. Export the current unified diff, tweak it, then simulate applying it to OLD.</p>
       <div class="row" style="margin-top:6px">
-        <button class="primary" id="loadPatchBtn">load current unified diff</button>
-        <button id="applyPatchBtn">apply to OLD</button>
-        <button id="exportDiffBtn">export .diff</button>
-        <button id="copyDiffBtn">copy unified</button>
+        <button class="primary" id="loadPatchBtn" type="button">load current unified diff</button>
+        <button id="applyPatchBtn" type="button">apply to OLD</button>
+        <button id="exportDiffBtn" type="button">export .diff</button>
+        <button id="copyDiffBtn" type="button">copy unified</button>
       </div>
       <label for="patchText" style="margin-top:12px">Unified diff patch</label>
       <textarea id="patchText" rows="8" spellcheck="false" placeholder="Click “load current unified diff”…"></textarea>
@@ -1470,5 +1483,7 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
     doMerge();
     runDiff();
   </script>
-</body>
+
+  </main>
+  </body>
 </html>
