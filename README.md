@@ -1,5 +1,9 @@
 # diffkit
 
+[![CI](https://github.com/umer-78/diffkit/actions/workflows/ci.yml/badge.svg)](https://github.com/umer-78/diffkit/actions/workflows/ci.yml)
+
+**Live demo:** https://umer-78.github.io/diffkit/
+
 Diff, patch and three-way merge for text files, written from scratch in Go with
 no dependencies. Myers' O(ND) algorithm, patience diff, unified-diff output that
 matches GNU diff byte for byte, a patch reader that refuses to apply a patch to
