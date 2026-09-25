@@ -907,7 +907,6 @@ diffkit: line 1 is "package config", but the patch expects "server:"</div>
           else if (r.type === 'del') lines.push('-' + r.text);
           else lines.push('+' + r.text);
         }
-        idx = idx; // continue
       }
       const header = ['--- old', '+++ new'];
       if (lines.length === 0) return '(no differences)';
