@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/umer-78/diffkit/actions/workflows/ci.yml/badge.svg)](https://github.com/umer-78/diffkit/actions/workflows/ci.yml)
 
+[![Diffkit: the live demo](.github/preview.jpg)](https://umer-78.github.io/diffkit/)
+
 **Live demo:** https://umer-78.github.io/diffkit/
 
 Diff, patch and three-way merge for text files, written from scratch in Go with
